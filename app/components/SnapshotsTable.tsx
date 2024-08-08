@@ -119,8 +119,7 @@ export default function SnapshotsTable() {
       <div className="flex justify-between items-center mb-6">
         <div className="text-sm text-dark-secondary flex items-center">
           <FaInfoCircle className="mr-2" />
-          Note: Actual download size may vary slightly due to network conditions
-          and file updates.
+          Note: Age is when the most recent snapshot was taken.
         </div>
         <button
           onClick={handleRefresh}

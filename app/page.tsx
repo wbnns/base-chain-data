@@ -28,7 +28,7 @@ export default function Home() {
       </h2>
       <p className="mb-6 text-dark-secondary">
         This table shows the current sizes of snapshots for Base Testnet and
-        Mainnet along with the option to download.
+        Mainnet along with options to download.
       </p>
       <SnapshotsTable />
     </div>

@@ -29,7 +29,17 @@ const formatSize = (size: string): string => {
 };
 
 const formatAge = (age: string): string => {
-  return age === "1 days" ? "1 day" : age;
+  const match = age.match(
+    /(\d+)\s*(second|minute|hour|day|week|month|year)s?\s*ago/
+  );
+  if (match) {
+    const [, value, unit] = match;
+    const numericValue = parseInt(value, 10);
+    if (numericValue === 1) {
+      return `1 ${unit} ago`;
+    }
+  }
+  return age;
 };
 
 export default function SnapshotsTable() {

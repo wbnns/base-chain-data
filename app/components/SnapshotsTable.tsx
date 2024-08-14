@@ -28,6 +28,10 @@ const formatSize = (size: string): string => {
   return size;
 };
 
+const formatAge = (age: string): string => {
+  return age === "1 days" ? "1 day" : age;
+};
+
 export default function SnapshotsTable() {
   const [snapshots, setSnapshots] = useState<Snapshot[]>([]);
   const [loading, setLoading] = useState(true);
@@ -52,6 +56,7 @@ export default function SnapshotsTable() {
       const formattedData = data.map((snapshot: Snapshot) => ({
         ...snapshot,
         size: formatSize(snapshot.size),
+        age: formatAge(snapshot.age),
       }));
       if (updateState) {
         setSnapshots(formattedData);

@@ -23,6 +23,14 @@ function calculateAge(timestamp: number): string {
   return `${Math.floor(diffInSeconds / 86400)} days ago`;
 }
 
+function formatFileSize(bytes: number): string {
+  if (bytes === 0) return "0 GB";
+
+  // Convert bytes to GB with 2 decimal places
+  const gb = (bytes / (1024 * 1024 * 1024)).toFixed(2);
+  return `${gb} GB`;
+}
+
 export async function GET() {
   const snapshots = [
     {
@@ -54,16 +62,21 @@ export async function GET() {
   const results = await Promise.all(
     snapshots.map(async (snapshot) => {
       try {
+        // Get the latest filename
         const latestResponse = await axios.get(`${snapshot.url}latest`);
         const latestFileName = latestResponse.data.trim();
 
-        const fileResponse = await axios.head(
+        // Get the file size using HEAD request
+        const headResponse = await axios.head(
           `${snapshot.url}${latestFileName}`
         );
-        const contentLength = fileResponse.headers["content-length"];
-        const contentLengthGB = contentLength
-          ? (parseInt(contentLength) / (1024 * 1024 * 1024)).toFixed(2)
-          : "Unknown";
+        const contentLength = headResponse.headers["content-length"];
+
+        if (!contentLength) {
+          throw new Error("No content-length header found");
+        }
+
+        const fileSize = parseInt(contentLength);
 
         // Extract timestamp from filename (assuming format like 'base-sepolia-full-1234567890.tar.zst')
         const timestamp = parseInt(
@@ -73,7 +86,7 @@ export async function GET() {
 
         return {
           ...snapshot,
-          size: `${contentLengthGB} GB`,
+          size: formatFileSize(fileSize),
           age,
           latestFileName,
         };
